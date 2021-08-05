@@ -6,7 +6,7 @@ const initialState = {
   messages: [],
 };
 
-const appName = "fluidia";
+const appName = "fluidiab";
 
 function messagesReducer(state, message) {
   return {
