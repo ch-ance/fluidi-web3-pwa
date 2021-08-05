@@ -1,19 +1,32 @@
-import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import React, { useContext } from "react";
 import Gun from "gun";
 import sea from "gun/sea";
-import { GunProvider } from "@altrx/gundb-react-auth";
 
 const peers = ["https://gun-us.herokuapp.com/gun"];
 
-const AppProviders = ({ children }) => {
-  return (
-    <Router>
-      <GunProvider peers={peers} sea={sea} Gun={Gun} keyFieldName="todoKeys">
-          {children}
-      </GunProvider>
-    </Router>
-  );
+// Create context
+const GunContext = React.createContext({});
+
+export const GunProvider = ({ children }) => {
+  const gun = Gun({ peers });
+
+  return <GunContext.Provider value={{ gun }}>{children}</GunContext.Provider>;
 };
 
-export { AppProviders };
+export const useGun = () => {
+  const { gun } = useContext(GunContext);
+
+  return {
+    gun,
+  };
+};
+
+// const AppProviders = ({ children }) => {
+//   return (
+//     <Router>
+//       <GunProvider peers={peers} sea={sea} Gun={Gun} keyFieldName="todoKeys">
+//           {children}
+//       </GunProvider>
+//     </Router>
+//   );
+// };

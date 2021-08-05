@@ -8,17 +8,12 @@ const AuthenticatedApp = lazy(() =>
 );
 const UnauthenticatedApp = lazy(() => import("./UnauthenticatedApp"));
 
-
 function App() {
-  const { isLoggedIn } = useAuth();
+  const isLoggedIn = Boolean(localStorage.getItem("authKeys"));
 
   return (
     <Suspense fallback={<p>loading...</p>}>
-      {isLoggedIn ? (
-        <AuthenticatedApp />
-      ) : (
-        <UnauthenticatedApp />
-      )}
+      {isLoggedIn ? <AuthenticatedApp /> : <UnauthenticatedApp />}
     </Suspense>
   );
 }
