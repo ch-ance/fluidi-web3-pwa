@@ -11,7 +11,7 @@ const appName = "fluidi111";
 
 function messagesReducer(state, message) {
   return {
-    messages: [...state.messages, message],
+    messages: [message, ...state.messages],
   };
 }
 
@@ -23,7 +23,6 @@ function ChatRoomView() {
   });
   const { user, sea } = useAuth();
   const certificate = sea.certify("*");
-  const [gun] = useGun(Gun, { peers: ["https://gun-us.herokuapp.com/gun"] });
 
   // initialize the reducer & state for holding the messages array
   const [state, dispatch] = useReducer(messagesReducer, initialState);
