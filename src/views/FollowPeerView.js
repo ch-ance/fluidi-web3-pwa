@@ -7,7 +7,8 @@ const FollowPeerView = () => {
     const index = window.location.pathname.indexOf("follow/");
     const peerId = window.location.pathname.slice(index + 7);
     console.log(peerId);
-    user.get("following").set(peerId);
+    const alias = prompt("What do you want to call this person?");
+    user.get("following").set({ pub: peerId, alias });
   }, []);
 
   return <h1>following</h1>;
