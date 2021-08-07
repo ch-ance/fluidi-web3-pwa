@@ -17,7 +17,7 @@ function App() {
 
   return (
     <Suspense fallback={<p>loading...</p>}>
-      {user.is.pub ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+      {user?.is?.pub ? <AuthenticatedApp /> : <UnauthenticatedApp />}
     </Suspense>
   );
 }
