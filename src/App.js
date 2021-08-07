@@ -2,18 +2,24 @@ import { useEffect, useState, useReducer, Suspense, lazy } from "react";
 import Gun from "gun";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ChatRoomView from "./views/ChatRoomView";
-import { useAuth } from "@altrx/gundb-react-auth";
+import gun from "./gun";
+import { AuthProvider, useAuth } from "./context";
 const AuthenticatedApp = lazy(() =>
   import(/* webpackPrefetch: true */ "./AuthenticatedApp")
 );
 const UnauthenticatedApp = lazy(() => import("./UnauthenticatedApp"));
 
 function App() {
-  const isLoggedIn = Boolean(localStorage.getItem("authKeys"));
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    console.info(`USER!`, user);
+  }, [user]);
 
   return (
     <Suspense fallback={<p>loading...</p>}>
-      {isLoggedIn ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+        {user ? <AuthenticatedApp /> : <UnauthenticatedApp />}
     </Suspense>
   );
 }

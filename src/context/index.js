@@ -1,32 +1,24 @@
-import React, { useContext } from "react";
-import Gun from "gun";
-import sea from "gun/sea";
-
-const peers = ["https://gun-us.herokuapp.com/gun"];
+import React, { useContext, useState } from "react";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 // Create context
-const GunContext = React.createContext({});
+const AuthContext = React.createContext({});
 
-export const GunProvider = ({ children }) => {
-  const gun = Gun({ peers });
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useLocalStorage("user");
 
-  return <GunContext.Provider value={{ gun }}>{children}</GunContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export const useGun = () => {
-  const { gun } = useContext(GunContext);
+export const useAuth = () => {
+  const { user, setUser } = useContext(AuthContext);
 
   return {
-    gun,
+    user,
+    setUser,
   };
 };
-
-// const AppProviders = ({ children }) => {
-//   return (
-//     <Router>
-//       <GunProvider peers={peers} sea={sea} Gun={Gun} keyFieldName="todoKeys">
-//           {children}
-//       </GunProvider>
-//     </Router>
-//   );
-// };
