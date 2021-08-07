@@ -6,7 +6,7 @@ import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-
+import { v4 as uuidv4 } from "uuid";
 const user = gun.user().recall({ sessionStorage: true });
 
 const initialState = {
@@ -41,6 +41,7 @@ function HomeFeedView() {
   const [userPk, setUserPk] = useState("");
 
   useEffect(() => {
+    console.log("pk ", user.is.pub);
     user
       .get("following")
       .map()
@@ -53,6 +54,20 @@ function HomeFeedView() {
         });
 
         // subscribe to the "following"'s droplet feed
+        console.log("f", f);
+        if (!f) return;
+        gun
+          .get(f)
+          .get("droplets")
+          .map()
+          .on((d) => {
+            console.log("d", d);
+            dispatch({
+              type: "addDroplet",
+              payload: d,
+            });
+          });
+        console.log("did it ");
       });
   }, []);
 
@@ -67,19 +82,27 @@ function HomeFeedView() {
       >
         <input value={userPk} onChange={(e) => setUserPk(e.target.value)} />
         <button type="submit">follow person</button>
+        <button
+          type="button"
+          onClick={() => {
+            gun
+              .get(user?.is?.pub)
+              .get("droplets")
+              .set({ text: userPk, id: uuidv4() });
+          }}
+        >
+          send droplet
+        </button>
       </form>
       <List className={classes.messageArea}>
         {[...new Set(state.following)].map((peer) => {
           return (
-            <ListItem key={peer.id}>
+            <ListItem key={peer}>
               <Grid container>
                 <Grid item xs={12}>
-                  {/* <ListItemText primary={`${drop.userPk} ${drop.message}`} /> */}
-                  <h2>{JSON.stringify(peer)}</h2>
+                  <ListItemText primary={peer} />
                 </Grid>
-                <Grid item xs={12}>
-                  {/* <ListItemText secondary={String(new Date(drop.createdAt))} /> */}
-                </Grid>
+                <Grid item xs={12}></Grid>
               </Grid>
             </ListItem>
           );
@@ -88,15 +111,14 @@ function HomeFeedView() {
       <Divider />
       <List className={classes.messageArea}>
         {[...new Set(state.droplets)].map((drop) => {
+          console.log(drop)
           return (
             <ListItem key={drop.id}>
               <Grid container>
                 <Grid item xs={12}>
-                  <ListItemText primary={`${drop.userPk} ${drop.message}`} />
+                  <ListItemText primary={drop.text} />
                 </Grid>
-                <Grid item xs={12}>
-                  <ListItemText secondary={String(new Date(drop.createdAt))} />
-                </Grid>
+                <Grid item xs={12}></Grid>
               </Grid>
             </ListItem>
           );
