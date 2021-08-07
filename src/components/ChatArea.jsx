@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
@@ -13,6 +13,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
 import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
+import Videocam from "@material-ui/icons/Videocam";
+import gun from "../gun";
+import { useHistory } from "react-router-dom";
+import { useAuth } from "../context";
+import { useReducer } from "react";
 
 const useStyles = makeStyles({
   table: {
@@ -32,11 +37,25 @@ const useStyles = makeStyles({
     height: "70vh",
     overflowY: "auto",
   },
+  videoPlayer: {
+    height: "10vh",
+    width: "100%",
+    border: "1px dotted black",
+  },
 });
 
 const ChatArea = ({ messages, saveMessage, formState, onChange }) => {
-  console.log(messages);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
   const classes = useStyles();
+  const history = useHistory();
+
+  const user = JSON.parse(localStorage.getItem("gap/gun/"));
+  const pk = user[Object.keys(user)[0]].pub;
+
+  useEffect(() => {
+    console.info(user);
+  }, []);
+
   return (
     <div>
       <Grid container component={Paper} className={classes.chatSection}>
@@ -49,10 +68,16 @@ const ChatArea = ({ messages, saveMessage, formState, onChange }) => {
                   <ListItem key={msg.id}>
                     <Grid container>
                       <Grid item xs={12}>
-                        <ListItemText primary={msg.message}></ListItemText>
+                        <ListItemText
+                          align={msg.userPk === pk ? "right" : "left"}
+                          primary={`${msg.userPk} ${msg.message}`}
+                        />
                       </Grid>
                       <Grid item xs={12}>
-                        <ListItemText align="right"></ListItemText>
+                        <ListItemText
+                          align={msg.userPk === pk ? "right" : "left"}
+                          secondary={String(new Date(msg.createdAt))}
+                        />
                       </Grid>
                     </Grid>
                   </ListItem>
@@ -76,12 +101,15 @@ const ChatArea = ({ messages, saveMessage, formState, onChange }) => {
               <Fab color="primary" aria-label="add">
                 <SendIcon onClick={saveMessage} />
               </Fab>
+
             </Grid>
           </Grid>
         </Grid>
       </Grid>
     </div>
   );
+
+
 };
 
 export default ChatArea;

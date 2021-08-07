@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "./context";
 import gun from "./gun";
 
@@ -6,6 +6,11 @@ export default function LoginView() {
   const [alias, setAlias] = useState("");
   const [pass, setPass] = useState("");
   const { setUser } = useAuth();
+
+  useEffect(() => {
+    const data = gun.get("/fluidi").map();
+    console.log(data);
+  }, []);
   return (
     <div id="splash">
       <h1 id="appName">Fluidi</h1>
@@ -29,19 +34,18 @@ export default function LoginView() {
   );
 
   async function newUser() {
-    const user = gun.user();
-    user.create(alias, pass, (ack) => {
-      console.log(ack);
-      setUser(user);
+    const user = gun.user().recall({ sessionStorage: true });
+    user.create(alias, pass, () => {
+      user.auth(alias, pass);
     });
+
     // window.location.reload();
   }
 
   async function existingUser() {
-    const user = gun.user();
+    const user = gun.user().recall({ sessionStorage: true });
     user.auth(alias, pass, (ack) => {
       console.log(ack);
-      setUser(user);
     });
   }
 }

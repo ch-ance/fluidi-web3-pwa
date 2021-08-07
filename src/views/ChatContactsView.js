@@ -13,8 +13,8 @@ function contactsReducer(state, contact) {
 }
 
 const ChatContacts = () => {
-  const [contacts, setContacts] = useState([]);
   const [state, dispatch] = useReducer(contactsReducer, initialState);
+  const [roomName, setRoomName] = useState("");
   const history = useHistory();
 
   useEffect(() => {
@@ -27,6 +27,11 @@ const ChatContacts = () => {
 
   return (
     <div>
+      <input
+        value={roomName}
+        placeholder="room name..."
+        onChange={(e) => setRoomName(e.target.value)}
+      />
       <button onClick={joinRoom}>enter a new room</button>
       <ul>
         {state.contacts.map((contact) => {
@@ -37,7 +42,6 @@ const ChatContacts = () => {
   );
 
   function joinRoom() {
-    const roomName = prompt("What room would you like to enter?");
     gun.get("fluidi").get("contacts").set({ name: roomName });
   }
 

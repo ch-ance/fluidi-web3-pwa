@@ -10,16 +10,14 @@ const AuthenticatedApp = lazy(() =>
 const UnauthenticatedApp = lazy(() => import("./UnauthenticatedApp"));
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { user } = useAuth();
+  const user = gun.user().recall({ sessionStorage: true });
 
-  useEffect(() => {
-    console.info(`USER!`, user);
-  }, [user]);
+  console.info("user", user);
+  console.log("user is", user.is);
 
   return (
     <Suspense fallback={<p>loading...</p>}>
-        {user ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+      {user.is.pub ? <AuthenticatedApp /> : <UnauthenticatedApp />}
     </Suspense>
   );
 }

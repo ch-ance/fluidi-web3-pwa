@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ChatRoomView from "./views/ChatRoomView";
-import gun from './gun';
+import gun from "./gun";
+import HomeFeedView from "./views/HomeFeedView";
 import ChatContactsView from "./views/ChatContactsView";
 
 const AuthenticatedApp = () => {
@@ -8,7 +9,7 @@ const AuthenticatedApp = () => {
     <Router>
       <Switch>
         <Route exact path="/">
-          <h1>Home page</h1>
+          <HomeFeedView />
         </Route>
         <Route exact path="/chat">
           <ChatContactsView />

@@ -24,7 +24,8 @@ function ChatRoomView() {
   const roomName = history.location.pathname;
   console.log(roomName);
   const certificate = sea.certify("*");
-
+  const user = JSON.parse(localStorage.getItem("gap/gun/"));
+  const pk = user[Object.keys(user)[0]].pub;
   // initialize the reducer & state for holding the messages array
   const [state, dispatch] = useReducer(messagesReducer, initialState);
 
@@ -36,6 +37,7 @@ function ChatRoomView() {
       dispatch({
         message: m.message,
         createdAt: m.createdAt,
+        userPk: m.userPk,
       });
     });
   }, []);
@@ -48,6 +50,7 @@ function ChatRoomView() {
       await messages.set({
         message: formState.message,
         createdAt: Date.now(),
+        userPk: pk,
       });
       setFormState({
         name: "",
