@@ -41,12 +41,13 @@ function HomeFeedView() {
   const [userPk, setUserPk] = useState("");
 
   useEffect(() => {
-    user
+    gun
+      .user()
       .get("following")
       .map()
       .on((f) => {
         console.log(f);
-        // dispatch the "following" to state so that it can be mapped over and displayed
+        // dispatch "following" to state so that it can be mapped over and displayed
         dispatch({
           type: "addFollowing",
           payload: f,
@@ -55,7 +56,7 @@ function HomeFeedView() {
         // subscribe to the "following"'s droplet feed
         if (!f) return;
         gun
-          .get(f)
+          .user(f)
           .get("droplets")
           .map()
           .on((d) => {
@@ -71,6 +72,7 @@ function HomeFeedView() {
   return (
     <div>
       <h1>Feed</h1>
+      {user?.is?.pub}
       <button
         onClick={() => {
           alert(user?.is?.pub);
@@ -89,8 +91,9 @@ function HomeFeedView() {
         <button
           type="button"
           onClick={() => {
+            console.log(`is logged in?`, user.is);
             gun
-              .get(user?.is?.pub)
+              .user()
               .get("droplets")
               .set({ text: userPk, id: uuidv4(), author: user?.is?.pub });
           }}
