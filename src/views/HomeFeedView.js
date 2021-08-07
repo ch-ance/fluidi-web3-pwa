@@ -55,7 +55,7 @@ function HomeFeedView() {
       .get("following")
       .map()
       .on((f) => {
-        // get the user data (their alias, namely)
+        // get the user data/follow/5_WlW9O9w-R3VCwWzTNuCILvfoUp8eKB6cqz-09Pps4.yrCHr92Er0UeE5A4iI7Rap0wE3LwYOu54_0yhOKAJyU (their alias, namely)
         // const alias = gun.user(f.pub).once().pub;
         // // dispatch "following" to state so that it can be mapped over and displayed
         // f.alias = alias;
@@ -91,6 +91,7 @@ function HomeFeedView() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          console.log(user?.is?.pub)
           gun
             .get(user?.is?.pub)
             .get("droplets")

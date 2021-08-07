@@ -1,37 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from "./context";
+import React, { useState } from "react";
 import gun from "./gun";
-
+import Login from "./components/Login/Login";
 export default function LoginView({ setIsLoggedIn }) {
   const [alias, setAlias] = useState("");
   const [pass, setPass] = useState("");
-  const { setUser } = useAuth();
 
-  useEffect(() => {
-    const data = gun.get("/fluidi").map();
-    console.log(data);
-  }, []);
   return (
-    <div id="splash">
-      <h1 id="appName">Fluidi</h1>
-      <input
-        value={alias}
-        placeholder="username"
-        onChange={(e) => setAlias(e.target.value)}
-      />
-      <input
-        value={pass}
-        placeholder="password"
-        onChange={(e) => setPass(e.target.value)}
-      />
-      <br />
-      <br />
-      <button onClick={newUser}>New user click here</button>
-      <br />
-      <br />
-      <button onClick={existingUser}>Existing user click here</button>
-    </div>
+    <Login
+      login={login}
+      alias={alias}
+      setAlias={setAlias}
+      pass={pass}
+      setPass={setPass}
+    />
   );
+
+  function login(e) {
+    e.preventDefault();
+    try {
+      newUser();
+    } catch (err) {
+      console.error(err);
+      existingUser();
+    }
+  }
 
   async function newUser() {
     const user = gun.user().recall({ sessionStorage: true });
