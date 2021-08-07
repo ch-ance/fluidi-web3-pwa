@@ -80,17 +80,6 @@ function HomeFeedView() {
       >
         <input value={userPk} onChange={(e) => setUserPk(e.target.value)} />
         <button type="submit">follow person</button>
-        <button
-          type="button"
-          onClick={() => {
-            gun
-              .get(user?.is?.pub)
-              .get("droplets")
-              .set({ text: userPk, id: uuidv4() });
-          }}
-        >
-          send droplet
-        </button>
       </form>
       <List className={classes.messageArea}>
         {[...new Set(state.following)].map((peer) => {

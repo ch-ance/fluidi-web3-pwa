@@ -1,4 +1,3 @@
-import React, { useContext } from "react";
 import Gun from "gun";
 
 const peers = ["https://gun-us.herokuapp.com/gun"];

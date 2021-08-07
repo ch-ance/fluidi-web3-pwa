@@ -1,6 +1,4 @@
 import { useEffect, useState, useReducer, Suspense, lazy } from "react";
-import Gun from "gun";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ChatRoomView from "./views/ChatRoomView";
 import gun from "./gun";
 import { AuthProvider, useAuth } from "./context";
@@ -12,8 +10,7 @@ const UnauthenticatedApp = lazy(() => import("./UnauthenticatedApp"));
 function App() {
   const user = gun.user().recall({ sessionStorage: true });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  console.info("user", user);
-  console.log("user is", user.is);
+
 
   return (
     <Suspense fallback={<p>loading...</p>}>
