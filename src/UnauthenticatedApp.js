@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "./context";
 import gun from "./gun";
 
-export default function LoginView() {
+export default function LoginView({ setIsLoggedIn }) {
   const [alias, setAlias] = useState("");
   const [pass, setPass] = useState("");
   const { setUser } = useAuth();
@@ -37,15 +37,15 @@ export default function LoginView() {
     const user = gun.user().recall({ sessionStorage: true });
     user.create(alias, pass, () => {
       user.auth(alias, pass);
+      setIsLoggedIn(true);
     });
-
-    // window.location.reload();
   }
 
   async function existingUser() {
     const user = gun.user().recall({ sessionStorage: true });
     user.auth(alias, pass, (ack) => {
       console.log(ack);
+      setIsLoggedIn(true);
     });
   }
 }

@@ -41,7 +41,6 @@ function HomeFeedView() {
   const [userPk, setUserPk] = useState("");
 
   useEffect(() => {
-    console.log("pk ", user.is.pub);
     user
       .get("following")
       .map()
@@ -54,7 +53,6 @@ function HomeFeedView() {
         });
 
         // subscribe to the "following"'s droplet feed
-        console.log("f", f);
         if (!f) return;
         gun
           .get(f)
@@ -67,13 +65,13 @@ function HomeFeedView() {
               payload: d,
             });
           });
-        console.log("did it ");
       });
   }, []);
 
   return (
     <div>
       <h1>Feed</h1>
+      <h2>{user?.is?.pub}</h2>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -111,7 +109,7 @@ function HomeFeedView() {
       <Divider />
       <List className={classes.messageArea}>
         {[...new Set(state.droplets)].map((drop) => {
-          console.log(drop)
+          console.log(drop);
           return (
             <ListItem key={drop.id}>
               <Grid container>

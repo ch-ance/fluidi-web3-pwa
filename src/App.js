@@ -11,13 +11,17 @@ const UnauthenticatedApp = lazy(() => import("./UnauthenticatedApp"));
 
 function App() {
   const user = gun.user().recall({ sessionStorage: true });
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   console.info("user", user);
   console.log("user is", user.is);
 
   return (
     <Suspense fallback={<p>loading...</p>}>
-      {user?.is?.pub ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+      {user?.is?.pub || isLoggedIn ? (
+        <AuthenticatedApp />
+      ) : (
+        <UnauthenticatedApp setIsLoggedIn={setIsLoggedIn}/>
+      )}
     </Suspense>
   );
 }
