@@ -9,6 +9,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { v4 as uuidv4 } from "uuid";
 import { Typography } from "@material-ui/core";
+import VirtualizedList from "../components/DropletFeed/VirtualizedList";
 const user = gun.user().recall({ sessionStorage: true });
 
 const initialState = {
@@ -91,7 +92,7 @@ function HomeFeedView() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          console.log(user?.is?.pub)
+          console.log(user?.is?.pub);
           gun
             .get(user?.is?.pub)
             .get("droplets")
@@ -111,7 +112,7 @@ function HomeFeedView() {
           send droplet
         </button>
       </form>
-      <List className={classes.peerList}>
+      {/* <List className={classes.peerList}>
         <Typography variant="body1">People you're following:</Typography>
         {[...new Set(state.following)].map((peer) => {
           return (
@@ -125,9 +126,10 @@ function HomeFeedView() {
             </ListItem>
           );
         })}
-      </List>
+      </List> */}
       <Divider />
-      <List className={classes.dropletList}>
+      <VirtualizedList droplets={state.droplets} />
+      {/* <List className={classes.dropletList}>
         {[...new Set(state.droplets)].map((drop) => {
           return (
             <ListItem key={drop.droplet.id}>
@@ -141,7 +143,7 @@ function HomeFeedView() {
             </ListItem>
           );
         })}
-      </List>
+      </List> */}
     </Box>
   );
 }
