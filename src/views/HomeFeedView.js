@@ -71,7 +71,13 @@ function HomeFeedView() {
   return (
     <div>
       <h1>Feed</h1>
-      <h2>{user?.is?.pub}</h2>
+      <button
+        onClick={() => {
+          alert(user?.is?.pub);
+        }}
+      >
+        View public key
+      </button>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -80,6 +86,17 @@ function HomeFeedView() {
       >
         <input value={userPk} onChange={(e) => setUserPk(e.target.value)} />
         <button type="submit">follow person</button>
+        <button
+          type="button"
+          onClick={() => {
+            gun
+              .get(user?.is?.pub)
+              .get("droplets")
+              .set({ text: userPk, id: uuidv4(), author: user?.is?.pub });
+          }}
+        >
+          send droplet
+        </button>
       </form>
       <List className={classes.messageArea}>
         {[...new Set(state.following)].map((peer) => {
