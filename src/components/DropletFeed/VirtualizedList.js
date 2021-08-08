@@ -23,6 +23,7 @@ const VirtualizedList = ({ droplets }) => {
       <Droplet
         text={droplet?.droplet.text}
         createdAt={droplet?.droplet.createdAt}
+        author={droplet?.author.pub}
       />
     );
   };

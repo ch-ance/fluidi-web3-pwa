@@ -4,11 +4,15 @@ import gun from "./gun";
 import HomeFeedView from "./views/HomeFeedView";
 import ChatContactsView from "./views/ChatContactsView";
 import FollowPeerView from "./views/FollowPeerView";
+import OnboardingView from "./views/OnboardingView";
 
 const AuthenticatedApp = () => {
   return (
     <Router>
       <Switch>
+        <Route exact path="/onboarding">
+          <OnboardingView />
+        </Route>
         <Route exact path="/">
           <HomeFeedView />
         </Route>

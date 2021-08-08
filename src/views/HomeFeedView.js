@@ -80,8 +80,6 @@ function HomeFeedView() {
       });
   }, []);
 
-  if (!state?.droplets.length) return <h1>loading...</h1>;
-
   return (
     <Box className={classes.view}>
       <h1>Feed</h1>
@@ -116,23 +114,8 @@ function HomeFeedView() {
           send droplet
         </button>
       </form>
-      {/* <List className={classes.peerList}>
-        <Typography variant="body1">People you're following:</Typography>
-        {[...new Set(state.following)].map((peer) => {
-          return (
-            <ListItem key={peer.pub}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <ListItemText primary={peer?.alias} />
-                </Grid>
-                <Grid item xs={12}></Grid>
-              </Grid>
-            </ListItem>
-          );
-        })}
-      </List> */}
       <Divider />
-      <VirtualizedList droplets={state?.droplets} />
+      {state.droplets && <VirtualizedList droplets={state?.droplets} />}
       {/* <List className={classes.dropletList}>
         {[...new Set(state.droplets)].map((drop) => {
           return (
