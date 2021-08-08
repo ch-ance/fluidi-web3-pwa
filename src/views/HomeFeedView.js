@@ -80,6 +80,8 @@ function HomeFeedView() {
       });
   }, []);
 
+  if (!state.droplets.length) return <h1>loading...</h1>;
+
   return (
     <Box className={classes.view}>
       <h1>Feed</h1>
@@ -93,10 +95,12 @@ function HomeFeedView() {
         onSubmit={(e) => {
           e.preventDefault();
           console.log(user?.is?.pub);
-          gun
-            .get(user?.is?.pub)
-            .get("droplets")
-            .set({ text: dropletText, id: uuidv4(), author: user?.is?.pub });
+          gun.get(user?.is?.pub).get("droplets").set({
+            text: dropletText,
+            id: uuidv4(),
+            author: user?.is?.pub,
+            createdAt: Date.now(),
+          });
         }}
       >
         <input

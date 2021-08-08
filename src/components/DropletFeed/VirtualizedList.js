@@ -19,7 +19,12 @@ const VirtualizedList = ({ droplets }) => {
   const Row = ({ index, style }) => {
     const droplet = droplets[index];
 
-    return <Droplet text={droplet.droplet.text} />;
+    return (
+      <Droplet
+        text={droplet.droplet.text}
+        createdAt={droplet.droplet.createdAt}
+      />
+    );
   };
 
   const getDropletSize = (index) => {
@@ -31,7 +36,7 @@ const VirtualizedList = ({ droplets }) => {
     <VariableSizeList
       height={window.innerHeight}
       width={window.innerWidth}
-      itemCount={droplets?.length || 0}
+      itemCount={10}
       itemSize={getDropletSize}
     >
       {Row}
@@ -41,4 +46,4 @@ const VirtualizedList = ({ droplets }) => {
   return <ListComponent />;
 };
 
-export default VirtualizedList;
+export default React.memo(VirtualizedList);
