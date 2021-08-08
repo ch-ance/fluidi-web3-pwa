@@ -22,12 +22,12 @@ function reducer(state, action) {
     case "addDroplet":
       return {
         ...state,
-        droplets: [...state.droplets, action.payload],
+        droplets: [...state?.droplets, action.payload],
       };
     case "addFollowing":
       return {
         ...state,
-        following: [...state.following, action.payload],
+        following: [...state?.following, action.payload],
       };
     default:
       throw new Error(
@@ -80,7 +80,7 @@ function HomeFeedView() {
       });
   }, []);
 
-  if (!state.droplets.length) return <h1>loading...</h1>;
+  if (!state?.droplets.length) return <h1>loading...</h1>;
 
   return (
     <Box className={classes.view}>
@@ -132,7 +132,7 @@ function HomeFeedView() {
         })}
       </List> */}
       <Divider />
-      <VirtualizedList droplets={state.droplets} />
+      <VirtualizedList droplets={state?.droplets} />
       {/* <List className={classes.dropletList}>
         {[...new Set(state.droplets)].map((drop) => {
           return (

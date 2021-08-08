@@ -21,8 +21,8 @@ const VirtualizedList = ({ droplets }) => {
 
     return (
       <Droplet
-        text={droplet.droplet.text}
-        createdAt={droplet.droplet.createdAt}
+        text={droplet?.droplet.text}
+        createdAt={droplet?.droplet.createdAt}
       />
     );
   };
