@@ -49,6 +49,13 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn({ alias, setAlias, pass, setPass, login }) {
   const classes = useStyles();
 
+  useEffect(() => {
+    // just clearing the local storage from any other data while testing
+    // not sure if this is needed in prod or not
+    window.localStorage.clear();
+    window.localStorage.clear();
+  }, []);
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
