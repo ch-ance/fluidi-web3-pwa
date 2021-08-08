@@ -8,7 +8,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { v4 as uuidv4 } from "uuid";
-import { Typography } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import VirtualizedList from "../components/DropletFeed/VirtualizedList";
 const user = gun.user().recall({ sessionStorage: true });
 
@@ -51,8 +51,7 @@ function HomeFeedView() {
   const [dropletText, setDropletText] = useState("");
 
   useEffect(() => {
-    gun
-      .user()
+    user
       .get("following")
       .map()
       .on((f) => {
@@ -83,6 +82,16 @@ function HomeFeedView() {
   return (
     <Box className={classes.view}>
       <h1>Feed</h1>
+      <Button
+        onClick={() => {
+          localStorage.clear();
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        }}
+      >
+        Click here to logout
+      </Button>
       <p>
         Send this link to a friend so they can follow you:
         <a href={`https://fluidi.netlify.com/follow/${user?.is?.pub}`}>
