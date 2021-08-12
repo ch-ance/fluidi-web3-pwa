@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import { VariableSizeList } from "react-window";
+import { FixedSizeList } from "react-window";
 import { Box, Card } from "@material-ui/core";
 import Droplet from "./Droplet";
 
@@ -15,33 +15,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const VirtualizedList = ({ droplets }) => {
+const VirtualizedList = ({ droplets, height, width }) => {
   const Row = ({ index, style }) => {
     const droplet = droplets[index];
-
+    console.log(droplet);
     return (
       <Droplet
+        style={style}
         text={droplet?.droplet.text}
         createdAt={droplet?.droplet.createdAt}
         author={droplet?.author.pub}
+        avatarUrl={JSON.stringify(droplet.author)}
       />
     );
   };
 
-  const getDropletSize = (index) => {
-    // return a size for droplets[index]
-    return 100;
-  };
-
   const ListComponent = () => (
-    <VariableSizeList
-      height={window.innerHeight}
-      width={window.innerWidth}
-      itemCount={10}
-      itemSize={getDropletSize}
+    <FixedSizeList
+      height={height}
+      width={width  }
+      itemCount={droplets.length}
+      itemSize={150}
     >
       {Row}
-    </VariableSizeList>
+    </FixedSizeList>
   );
 
   return <ListComponent />;

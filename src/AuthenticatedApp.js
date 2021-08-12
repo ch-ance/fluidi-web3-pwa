@@ -5,6 +5,7 @@ import HomeFeedView from "./views/HomeFeedView";
 import ChatContactsView from "./views/ChatContactsView";
 import FollowPeerView from "./views/FollowPeerView";
 import OnboardingView from "./views/OnboardingView";
+import FollowingListView from "./views/FollowingListView";
 
 const AuthenticatedApp = () => {
   return (
@@ -15,6 +16,9 @@ const AuthenticatedApp = () => {
         </Route>
         <Route exact path="/">
           <HomeFeedView />
+        </Route>
+        <Route exact path="/following">
+          <FollowingListView />
         </Route>
         <Route exact path="/chat">
           <ChatContactsView />

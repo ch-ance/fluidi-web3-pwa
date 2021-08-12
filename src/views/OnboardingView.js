@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   DialogContent,
@@ -8,10 +8,18 @@ import {
 } from "@material-ui/core";
 import gun from "../gun";
 import { useHistory } from "react-router-dom";
+const user = gun.user().recall({ sessionStorage: true });
 
 const OnboardingView = () => {
   const [imageUrl, setImageUrl] = useState("");
   const history = useHistory();
+
+  useEffect(() => {
+    gun
+      .get(user.is.pub)
+      .get("following")
+      .set({ pub: user.is.pub, alias: user.is.alias });
+  }, []);
 
   return (
     <Paper>
@@ -27,9 +35,12 @@ const OnboardingView = () => {
       <Button
         onClick={(e) => {
           e.preventDefault();
-          const user = gun.user().recall({ sessionStorage: true });
-          user.get("fluidi").get("profile").get("avatarUrl").put(imageUrl);
-          history.push("/");
+          user
+            .get("profile")
+            .get("avatarUrl")
+            .put(imageUrl, (ack) => {
+              history.push("/");
+            });
         }}
       >
         Save avatar image

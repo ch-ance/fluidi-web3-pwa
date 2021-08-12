@@ -8,8 +8,11 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { v4 as uuidv4 } from "uuid";
-import { Button, Typography } from "@material-ui/core";
+import { Button, TextField, Typography } from "@material-ui/core";
 import VirtualizedList from "../components/DropletFeed/VirtualizedList";
+import AutoSizer from "react-virtualized-auto-sizer";
+import Droplet from "../components/DropletFeed/Droplet";
+import { useHistory } from "react-router-dom";
 const user = gun.user().recall({ sessionStorage: true });
 
 const initialState = {
@@ -22,13 +25,9 @@ function reducer(state, action) {
     case "addDroplet":
       return {
         ...state,
-        droplets: [...state?.droplets, action.payload],
+        droplets: [...state.droplets, action.payload],
       };
-    case "addFollowing":
-      return {
-        ...state,
-        following: [...state?.following, action.payload],
-      };
+
     default:
       throw new Error(
         "action type not specified or not included in switch statement"
@@ -49,31 +48,35 @@ function HomeFeedView() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const classes = useStyles();
   const [dropletText, setDropletText] = useState("");
+  const history = useHistory();
 
   useEffect(() => {
-    user
+    gun
+      .get(user.is.pub)
       .get("following")
       .map()
       .on((f) => {
-        // get the user data/follow/5_WlW9O9w-R3VCwWzTNuCILvfoUp8eKB6cqz-09Pps4.yrCHr92Er0UeE5A4iI7Rap0wE3LwYOu54_0yhOKAJyU (their alias, namely)
         // const alias = gun.user(f.pub).once().pub;
         // // dispatch "following" to state so that it can be mapped over and displayed
         // f.alias = alias;
+        // if f is an empty string, GUN throws an error
+        if (!f?.pub) return;
+        console.log(f);
         dispatch({
           type: "addFollowing",
           payload: f,
         });
-        // if f is an empty string, GUN throws an error
-        if (!f) return;
+
         // subscribe to the "following"'s droplet feed
         gun
           .get(f.pub)
           .get("droplets")
           .map()
           .on((d) => {
+            console.log(d);
             dispatch({
               type: "addDroplet",
-              payload: { droplet: d, author: f },
+              payload: { droplet: d },
             });
           });
       });
@@ -84,7 +87,15 @@ function HomeFeedView() {
       <h1>Feed</h1>
       <Button
         onClick={() => {
+          history.push("/following");
+        }}
+      >
+        View Following
+      </Button>
+      <Button
+        onClick={() => {
           localStorage.clear();
+          sessionStorage.clear();
           setTimeout(() => {
             window.location.reload();
           }, 1500);
@@ -101,45 +112,62 @@ function HomeFeedView() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          console.log(user?.is?.pub);
-          gun.get(user?.is?.pub).get("droplets").set({
-            text: dropletText,
-            id: uuidv4(),
-            author: user?.is?.pub,
-            createdAt: Date.now(),
-          });
+          gun
+            .get(user.is.pub)
+            .get("droplets")
+            .set(
+              {
+                author: {
+                  pub: user.is.pub,
+                  alias: user.is.alias,
+                },
+                droplet: {
+                  text: dropletText,
+                  id: uuidv4(),
+                  createdAt: Date.now(),
+                },
+              },
+              (ack) => {
+                console.log(ack);
+                setDropletText("");
+              }
+            );
         }}
       >
-        <input
+        <TextField
           value={dropletText}
           onChange={(e) => setDropletText(e.target.value)}
         />
-        <button
-          type="submit"
-          onClick={() => {
-            console.log(`is logged in?`, user.is);
-          }}
-        >
-          send droplet
-        </button>
+        <Button type="submit">send droplet</Button>
       </form>
       <Divider />
-      {state.droplets && <VirtualizedList droplets={state?.droplets} />}
-      {/* <List className={classes.dropletList}>
+      {/* {state.droplets && (
+        <AutoSizer>
+          {({ height, width }) => (
+            <VirtualizedList
+              height={height}
+              width={width}
+              droplets={state?.droplets}
+            />
+          )}
+        </AutoSizer>
+      )} */}
+      <List className={classes.dropletList}>
         {[...new Set(state.droplets)].map((drop) => {
+          console.log(drop);
           return (
             <ListItem key={drop.droplet.id}>
               <Grid container>
-                <Grid item xs={12}>
-                  <ListItemText primary={drop.droplet.text} />
-                  <ListItemText align="right" primary={drop.author.alias} />
-                </Grid>
-                <Grid item xs={12}></Grid>
+                <Droplet
+                  text={drop?.droplet?.text}
+                  author={drop?.author?.alias}
+                  createdAt={drop?.droplet?.createdAt}
+                />
               </Grid>
             </ListItem>
           );
         })}
-      </List> */}
+      </List>
     </Box>
   );
 }

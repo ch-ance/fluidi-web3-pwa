@@ -31,11 +31,10 @@ export default function LoginView({ setIsLoggedIn }) {
     const user = gun.user().recall({ sessionStorage: true });
     user.create(alias, pass, async () => {
       user.auth(alias, pass);
-      setIsLoggedIn(true);
       setTimeout(() => {
         window.location.replace("/onboarding");
         window.location.reload();
-      }, 1000);
+      }, 5000);
     });
   }
 
@@ -43,11 +42,10 @@ export default function LoginView({ setIsLoggedIn }) {
     const user = gun.user().recall({ sessionStorage: true });
     user.auth(alias, pass, (ack) => {
       console.log(ack);
-      setIsLoggedIn(true);
       setTimeout(() => {
         window.location.replace("/onboarding");
         window.location.reload();
-      }, 1000);
+      }, 5000);
     });
   }
 }
